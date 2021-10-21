@@ -83,12 +83,14 @@ NGA_PUB <-read.csv("C:\\Users\\Alyssa\\OneDrive\\Desktop\\Malaria Consortium\\NG
 getJenksBreaks(NGA_PUB$ITN_access_INLA, 5, subset = NULL)  
 # [1] 0.009014783 0.233290972 0.354107688 0.493038245 0.792025051
 NGA_PUB$ITN_access_INLA_class[NGA_PUB$ITN_access_INLA < 23.0] <- 4
-NGA_PUB$ITN_access_INLA_class[NGA_PUB$ITN_access_INLA > 40.8] <- 4
-NGA_PUB$ITN_access_INLA_class[NGA_PUB$ITN_access_INLA > 40.8] <- 4
-NGA_PUB$ITN_access_INLA_class[NGA_PUB$ITN_access_INLA > 48.0] <- 1
+NGA_PUB$ITN_access_INLA_class[NGA_PUB$ITN_access_INLA <35.0 & NGA_PUB$ITN_access_INLA >= 23.0 ]  <- 3
+NGA_PUB$ITN_access_INLA_class[NGA_PUB$ITN_access_INLA < 48.0 & NGA_PUB$ITN_access_INLA >= 35.0] <- 2
+NGA_PUB$ITN_access_INLA_class[NGA_PUB$ITN_access_INLA >= 48.0] <- 1
 
 # 2.) Mean annual rainfall (RFE) ----------------------------------------------------------------------------
+
 # 3.) Built up area presence (SMOD): proxy for rural/urban designation ------------------------------------------------------------
+
 # 4.) Plasmodium falciparum temperature suitability indiex (TSI) --------------------------------------------------------------
 
 # Show malaria atlas project data available
