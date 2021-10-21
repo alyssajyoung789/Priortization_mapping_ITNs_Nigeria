@@ -2,7 +2,7 @@
 # CREATING ITN DISTRIBUTION PRIORTIZATION SCHEME FOR NIGERIA
 # Objective 1 :Create classes for each input factor using Jenks natural breaks or presence/absence of intervention
 # Objective 2: Assign weights to input factors using AHP methodology 
-# Author: Alyssa Young, Tulane SPHTM 
+# Author(s): Alyssa Young, Will Eaton, Tulane SPHTM 
 # Date last modified: 10/14/2021 
 # ------------------------------------------------------------------------------------------
 
@@ -10,28 +10,109 @@
 library(ahpsurvey)
 library(raster)
 library(sp)
+library(tmap)
+library(tmaptools)
 library(BAMMtools)
+library(readxl)
+library(ggplot2)
+library(malariaAtlas)
 library(exactextractr)
+library(maptools)
+library(raster)
+library(sf)
+library("spDataLarge")
+library(dplyr)
+library(GADMTools)
+
+#library(exactextractr)
+
+library(maptools)
+library(readr)
+library(foreign)   ; library(tsModel) ; library("lmtest") ; library("Epi")
+library("splines") ; library("vcd")
+library(reshape2)  ; library(hablar)
+library(tidyr)     
+library (viridis)
+library(data.table)
+library(forecast)  ; library(MASS)
+library(tseries)   ; library(scales)
+library(tsModel)   ; library(extrafont)
+library(lmtest)    ; library(tidyverse)
+library(stargazer) ; library(RColorBrewer)
+library(readxl)    ; library(olsrr)
+library(Hmisc)
+library(MASS)
+library(dplyr)
+library(devEMF)
+library(padr)
+library(zoo)
+library(tidyverse)
+library(naniar)
+library(GGally)
+library(cartogram)
+library(mgcv)
+library(BAMMtools)
+library(rgdal)
+library(leaflet)
+library(arsenal)
+require(data.table)
+require(RCurl)
+require(R.utils)
+require(gdalUtils)
+require(parallel)
 
 ## load dataset; data organized by admin 2 name factor weights, factor scores, and final priortizaiton score per LGA 
 ## as variables 
-NGA_PUB <-read.csv("C:\\Users\\Alyssa\\OneDrive\\Desktop\\Malaria Consortium\\Nigeria data\\NGA_maps_pub.csv")
-
+NGA_PUB <-read.csv("C:\\Users\\Alyssa\\OneDrive\\Desktop\\Malaria Consortium\\NGA_pub_maps_AHP_wt_10_21.csv")
 
 #-----------------------------------------------------------------------------------------------
 # Create Jenks classes based on distribution of data for each input factor/variable-------------
 # ----------------------------------------------------------------------------------------------
+# With natural breaks classification (Jenks) Natural Breaks Jenks, 
+# classes are based on natural groupings inherent in the data. 
+# Class breaks are identified that best group similar values and 
+# that maximize the differences between classes. The features are 
+# divided into classes whose boundaries are set where there are 
+# relatively big differences in the data values.
+# 
+# Natural breaks are data-specific classifications and not useful for 
+# comparing multiple maps built from different underlying information.
 
 # 1.) State-level ITN access (ITN Access) ------------------------------------------------------
-# 2.) Mean annual rainfall (RFE)
-# 3.) Built up area presence (SMOD): proxy for rural/urban designation
-# 4.) Plasmodium falciparum temperature suitability indiex (TSI)
+
+getJenksBreaks(NGA_PUB$ITN_access_INLA, 5, subset = NULL)  
+# [1] 0.009014783 0.233290972 0.354107688 0.493038245 0.792025051
+NGA_PUB$ITN_access_INLA_class[NGA_PUB$ITN_access_INLA < 23.0] <- 4
+NGA_PUB$ITN_access_INLA_class[NGA_PUB$ITN_access_INLA > 40.8] <- 4
+NGA_PUB$ITN_access_INLA_class[NGA_PUB$ITN_access_INLA > 40.8] <- 4
+NGA_PUB$ITN_access_INLA_class[NGA_PUB$ITN_access_INLA > 48.0] <- 1
+
+# 2.) Mean annual rainfall (RFE) ----------------------------------------------------------------------------
+# 3.) Built up area presence (SMOD): proxy for rural/urban designation ------------------------------------------------------------
+# 4.) Plasmodium falciparum temperature suitability indiex (TSI) --------------------------------------------------------------
+
+# Show malaria atlas project data available
+listData('raster', printed = TRUE)
+listRaster(printed = TRUE)
+#  Plasmodium falciparum Temperature Suitability 
+
+# Download malaria atlas project temp suitability raster layer 
+NGA_shp <- getShp(ISO = "NGA", admin_level = "admin0")
+
+# (From https://rdrr.io/cran/malariaAtlas/man/getRaster.html)
+nga_temp_suit_raster <- getRaster(surface = "Plasmodium falciparum Temperature Suitability", shp = NGA_shp)
+# Visualize raster in plot
+autoplot_MAPraster(nga_temp_suit_raster)
+
+
+
 # 5.) PBO nets previously distributed (PBO)
 # 6.) Number of years since last ITN distribtuion (NoYrsITN)
 # 7.) Presence of internally displaced persons (IDPs)
 # 8.) DHS-reported state level microscopy malaria prevalence among children under 5 (Prev)
-# 9.) Socioeconomic status/Mean Wealth Index (MWI): Percent pop in lowest quintile per state ---------------
 
+
+# 9.) Socioeconomic status/Mean Wealth Index (MWI): Percent pop in lowest quintile per state ---------------
 getJenksBreaks(NGA_PUB$Perc_pop_lowest_wealth_quintile_DHS_2018,5, subset = NULL)  
 # [1]  0.0  7.9 24.5 40.8 63.2
 #Assign Percent pop in lowest quintile per state
