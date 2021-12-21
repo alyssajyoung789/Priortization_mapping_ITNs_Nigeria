@@ -82,21 +82,34 @@ NGA_PUB <-read.csv("C:\\Users\\Alyssa\\OneDrive\\Desktop\\Malaria Consortium\\NG
 
 getJenksBreaks(NGA_PUB$ITN_access_INLA, 5, subset = NULL)  
 # [1] 0.009014783 0.233290972 0.354107688 0.493038245 0.792025051
+
 NGA_PUB$ITN_access_INLA_class[NGA_PUB$ITN_access_INLA < 23.0] <- 4
 NGA_PUB$ITN_access_INLA_class[NGA_PUB$ITN_access_INLA <35.0 & NGA_PUB$ITN_access_INLA >= 23.0 ]  <- 3
 NGA_PUB$ITN_access_INLA_class[NGA_PUB$ITN_access_INLA < 48.0 & NGA_PUB$ITN_access_INLA >= 35.0] <- 2
 NGA_PUB$ITN_access_INLA_class[NGA_PUB$ITN_access_INLA >= 48.0] <- 1
 
 # 2.) Mean annual rainfall (RFE) ----------------------------------------------------------------------------
+getJenksBreaks(NGA_PUB$mean_an_rf, 5, subset = NULL)  
+#[1] -53.22974  92.29017 146.79149 206.53586 300.44352
+
+NGA_PUB$rf_class[NGA_PUB$mean_an_rf > 207.0] <- 4
+NGA_PUB$rf_class[NGA_PUB$mean_an_rf <= 207 & NGA_PUB$ITN_access_INLA > 147.0]  <- 3
+NGA_PUB$rf_class[NGA_PUB$mean_an_rf <= 147.0 & NGA_PUB$ITN_access_INLA >= 92.0] <- 2
+NGA_PUB$rf_class[NGA_PUB$mean_an_rf <= 91.0] <- 1
 
 # 3.) Built up area presence (SMOD): proxy for rural/urban designation ------------------------------------------------------------
+getJenksBreaks(NGA_PUB$SMOD, 5, subset = NULL)
+
+NGA_PUB$Built_class[NGA_PUB$SMOD <= 0.0085] <- 4
+NGA_PUB$Built_class[NGA_PUB$SMOD <= 0.051 & NGA_PUB$SMOD > 0.0085]  <- 3
+NGA_PUB$Built_class[NGA_PUB$SMOD <= 0.76 & NGA_PUB$SMOD >= 0.05] <- 2
+NGA_PUB$Built_class[NGA_PUB$SMOD > 0.76] <- 1
 
 # 4.) Plasmodium falciparum temperature suitability indiex (TSI) --------------------------------------------------------------
 
 # Show malaria atlas project data available
 listData('raster', printed = TRUE)
 listRaster(printed = TRUE)
-#  Plasmodium falciparum Temperature Suitability 
 
 # Download malaria atlas project temp suitability raster layer 
 NGA_shp <- getShp(ISO = "NGA", admin_level = "admin0")
@@ -106,6 +119,13 @@ nga_temp_suit_raster <- getRaster(surface = "Plasmodium falciparum Temperature S
 # Visualize raster in plot
 autoplot_MAPraster(nga_temp_suit_raster)
 
+getJenksBreaks(NGA_PUB$mean_temp_suit, 5, subset = NULL)
+# [1] 0.3015740 0.4532296 0.5710385 0.6795321 0.7636224
+
+NGA_PUB$temp_suit_class[NGA_PUB$mean_temp_suit > 0.680] <- 4
+NGA_PUB$temp_suit_class[NGA_PUB$mean_temp_suit <= 0.680 & NGA_PUB$SMOD > 0.570]  <- 3
+NGA_PUB$temp_suit_class[NGA_PUB$mean_temp_suit <= 0.570 & NGA_PUB$SMOD >= 0.454] <- 2
+NGA_PUB$temp_suit_class[NGA_PUB$mean_temp_suit < 0.454] <- 1
 
 
 # 5.) PBO nets previously distributed (PBO)
