@@ -100,12 +100,12 @@ NGA_PUB$rf_class[NGA_PUB$mean_an_rf <= 91.0] <- 1
 # 3.) Built up area presence (SMOD): proxy for rural/urban designation ------------------------------------------------------------
 getJenksBreaks(NGA_PUB$SMOD, 5, subset = NULL)
 
-NGA_PUB$Built_class[NGA_PUB$SMOD <= 0.0085] <- 4
-NGA_PUB$Built_class[NGA_PUB$SMOD <= 0.051 & NGA_PUB$SMOD > 0.0085]  <- 3
+NGA_PUB$Built_class[NGA_PUB$SMOD <= 0.0084] <- 4
+NGA_PUB$Built_class[NGA_PUB$SMOD <= 0.051 & NGA_PUB$SMOD >= 0.0085]  <- 3
 NGA_PUB$Built_class[NGA_PUB$SMOD <= 0.76 & NGA_PUB$SMOD >= 0.05] <- 2
 NGA_PUB$Built_class[NGA_PUB$SMOD > 0.76] <- 1
 
-# 4.) Plasmodium falciparum temperature suitability indiex (TSI) --------------------------------------------------------------
+# 4.) Plasmodium falciparum temperature suitability index (TSI) --------------------------------------------------------------
 
 # Show malaria atlas project data available
 listData('raster', printed = TRUE)
