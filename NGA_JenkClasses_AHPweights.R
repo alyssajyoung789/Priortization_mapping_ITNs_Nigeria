@@ -127,12 +127,25 @@ NGA_PUB$temp_suit_class[NGA_PUB$mean_temp_suit <= 0.680 & NGA_PUB$SMOD > 0.570] 
 NGA_PUB$temp_suit_class[NGA_PUB$mean_temp_suit <= 0.570 & NGA_PUB$SMOD >= 0.454] <- 2
 NGA_PUB$temp_suit_class[NGA_PUB$mean_temp_suit < 0.454] <- 1
 
-
 # 5.) PBO nets previously distributed (PBO)
-# 6.) Number of years since last ITN distribtuion (NoYrsITN)
-# 7.) Presence of internally displaced persons (IDPs)
-# 8.) DHS-reported state level microscopy malaria prevalence among children under 5 (Prev)
+# data entered in manually in original dataset as binary 0/1 to correspond with yes or no
 
+# 6.) Number of years since last ITN distribtuion (NoYrsITN)
+NGA_PUB$ITN_dist_class[NGA_PUB$Year_last_MDC >= 6] <- 4
+NGA_PUB$ITN_dist_class[NGA_PUB$Year_last_MDC = 5]  <- 3
+NGA_PUB$ITN_dist_class[NGA_PUB$Year_last_MDC = 3] <- 2
+NGA_PUB$ITN_dist_class[NGA_PUB$Year_last_MDC < 3] <- 1
+
+# 7.) Presence of internally displaced persons (IDPs)
+# data entered in manually in original dataset as binary 0/1 to correspond with yes or no
+
+# 8.) DHS-reported state level microscopy malaria prevalence among children under 5 (Prev)
+# classes created using DHS cut-offs- not created using Jenks
+NGA_PUB$Prev_DHS_18_state_class[NGA_PUB$Prev_DHS_18_state_range_cat_adjusted > 42] <- 5
+NGA_PUB$Prev_DHS_18_state_class[NGA_PUB$Prev_DHS_18_state_range_cat_adjusted >= 33 & NGA_PUB$Prev_DHS_18_state_range_cat_adjusted <= 42 ] <- 4
+NGA_PUB$Prev_DHS_18_state_class[NGA_PUB$Prev_DHS_18_state_range_cat_adjusted >= 23 & NGA_PUB$Prev_DHS_18_state_range_cat_adjusted <= 32 ] <- 3
+NGA_PUB$Prev_DHS_18_state_class[NGA_PUB$Prev_DHS_18_state_range_cat_adjusted >= 13 & NGA_PUB$Prev_DHS_18_state_range_cat_adjusted <= 22 ] <- 2
+NGA_PUB$Prev_DHS_18_state_class[NGA_PUB$Prev_DHS_18_state_range_cat_adjusted <= 12] <- 1
 
 # 9.) Socioeconomic status/Mean Wealth Index (MWI): Percent pop in lowest quintile per state ---------------
 getJenksBreaks(NGA_PUB$Perc_pop_lowest_wealth_quintile_DHS_2018,5, subset = NULL)  
